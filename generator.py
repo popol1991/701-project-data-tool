@@ -54,9 +54,11 @@ def sift_id_entity():
         if count % 10000 == 0:
             print("{0}\r".format(count), file=sys.stderr, end="")
         if count % 4 == 0:
-            entity = line.strip()
+            entity = line.strip().lower()
         elif count % 4 == 1:
-            clist = [str(cdict[c]) for c in line.strip().lower().split('\t') if c in cdict]
+            clist = ["_".join(c.split(' ')) for c in line.strip().lower().split('\t')]
+            clist = [str(cdict[c]) for c in clist if c in cdict]
+            #clist = [str(cdict[c]) for c in line.strip().lower().split('\t') if c in cdict]
             if len(clist) > 0:
                 edict[entity] = idx
                 entity_out.write(entity + "\n")
@@ -78,7 +80,7 @@ def gen_pair():
     for line in fin:
         if count % 10000 == 0:
             print("{0}\r".format(count), file=sys.stderr, end="")
-        line = line.strip()
+        line = line.strip().lower()
         if count % 4 == 0:
             if line in edict:
                 entity = edict[line]
@@ -87,7 +89,7 @@ def gen_pair():
         elif entity is not None and count % 4 == 2:
             info = line.split("\t")
             for i in range(len(info)/2):
-                e = info[2*i]
+                e = info[2*i].lower()
                 if e in edict:
                     fout.write("{0}\t{1}\t{2}".format(entity, edict[e], info[2*i+1]) + "\n")
         count += 1
