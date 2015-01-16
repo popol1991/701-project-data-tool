@@ -54,13 +54,13 @@ def sift_id_entity():
         if count % 10000 == 0:
             print("{0}\r".format(count), file=sys.stderr, end="")
         if count % 4 == 0:
-            entity = line.strip().lower()
+            entity = line.strip()
         elif count % 4 == 1:
             clist = ["_".join(c.split(' ')) for c in line.strip().lower().split('\t')]
             clist = [str(cdict[c]) for c in clist if c in cdict]
             #clist = [str(cdict[c]) for c in line.strip().lower().split('\t') if c in cdict]
             if len(clist) > 0:
-                edict[entity] = idx
+                edict[entity.lower()] = idx
                 entity_out.write(entity + "\n")
                 e2c_out.write("\t".join([str(idx)] + clist) + "\n")
                 idx += 1
